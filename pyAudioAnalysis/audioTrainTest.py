@@ -439,11 +439,14 @@ def featureAndTrainRegression(dir_name, mt_win, mt_step, st_win, st_step,
         with open(c, 'rt') as csvfile:                                        # open the csv file that contains the current target value's annotations
             CSVreader = csv.reader(csvfile, delimiter=',', quotechar='|')
             for row in CSVreader:
+                print(row)
                 if len(row) == 2:                                             # if the current row contains two fields (filename, target value)
+                    print('len 2')
                     if row[0] in filenames:                                   # ... and if the current filename exists in the list of filenames
                         index = filenames.index(row[0])
                         cur_regression_labels.append(float(row[1]))
                         f_temp.append(features[index,:])
+                        print(f_temp)
                     else:
                         print("Warning: {} not found in list of files.".format(row[0]))
                 else:
@@ -455,6 +458,10 @@ def featureAndTrainRegression(dir_name, mt_win, mt_step, st_win, st_step,
         if len(features) == 0:
             print("ERROR: No data found in any input folder!")
             return
+
+    print(f_final)
+    print(len(f_final))
+    print(f_final[0].shape)
 
     n_feats = f_final[0].shape[1]
 

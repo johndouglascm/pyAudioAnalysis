@@ -164,6 +164,7 @@ def regressionFolderWrapper(inputFolder, model_type, model_name):
         Results.append(R)
     Results = numpy.array(Results)
 
+
     for i, r in enumerate(regressionNames):
         [Histogram, bins] = numpy.histogram(Results[:, i])
         centers = (bins[0:-1] + bins[1::]) / 2.0
@@ -172,6 +173,39 @@ def regressionFolderWrapper(inputFolder, model_type, model_name):
         plt.title(r)
     plt.show()
 
+    #Reasonable scatterplot for regression
+    N = len(Results) 
+    y = numpy.arange(N)  
+    col = numpy.where(Results[:,0]<.5,'r','b')
+    plt.scatter(y, Results, c=col, alpha=0.6)
+    plt.show()
+
+
+def regressionFolderWrapperLinearlySeparable(inputFolder, model_type, model_name):
+    files = "*.wav"
+    if os.path.isdir(inputFolder):
+        strFilePattern = os.path.join(inputFolder, files)
+    else:
+        strFilePattern = inputFolder + files
+
+    wavFilesList = []
+    wavFilesList.extend(glob.glob(strFilePattern))
+    wavFilesList = sorted(wavFilesList)
+    if len(wavFilesList) == 0:
+        print("No WAV files found!")
+        return
+    Results = []
+    for wavFile in wavFilesList:
+        R = aT.fileRegression(wavFile, model_name, model_type)
+        Results.append(R)
+    Results = numpy.array(Results)
+
+    #Reasonable scatterplot for regression
+    N = len(Results) 
+    y = numpy.arange(N)  
+    col = numpy.where(Results[:,0]<.5,'r','b')
+    plt.scatter(y, Results, c=col, alpha=0.6)
+    plt.show()
 
 def trainHMMsegmenter_fromfile(wavFile, gtFile, hmmModelName, mt_win, mt_step):
     if not os.path.isfile(wavFile):
@@ -496,6 +530,13 @@ def parse_arguments():
     regFolder.add_argument("--regression", required=True,
                            help="Regression model to use")
 
+    regFolder = tasks.add_parser("regressionFolderLinearlySeparable")
+    regFolder.add_argument("-i", "--input", required=True, help="Input folder")
+    regFolder.add_argument("--model", choices=["svm", "knn"],
+                           required=True, help="Classifier type")
+    regFolder.add_argument("--regression", required=True,
+                           help="Regression model to use")
+
     silrem = tasks.add_parser("silenceRemoval",
                               help="Remove silence segments from a recording")
     silrem.add_argument("-i", "--input", required=True, help="input audio file")
@@ -601,6 +642,9 @@ if __name__ == "__main__":
     elif args.task == "regressionFolder":
         # Apply a regression model on every WAV file in a given path
         regressionFolderWrapper(args.input, args.model, args.regression)
+    elif args.task == "regressionFolderLinearlySeparable":
+        # Apply a regression model on every WAV file in a given path
+        regressionFolderWrapperLinearlySeparable(args.input, args.model, args.regression)
     elif args.task == "silenceRemoval":
         # Detect non-silent segments in a WAV file and
         # output to seperate WAV files
