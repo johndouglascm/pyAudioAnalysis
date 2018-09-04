@@ -174,25 +174,35 @@ def regressionFolderWrapper(inputFolder, model_type, model_name):
         print("No WAV files found!")
         return
     Results = []
+    SyncFileNames = []
     for wavFile in wavFilesList:
         R, regressionNames = aT.fileRegression(wavFile, model_name, model_type)
         Results.append(R)
+        SyncFileNames.append(wavFile)
     Results = numpy.array(Results)
 
-
-    for i, r in enumerate(regressionNames):
-        [Histogram, bins] = numpy.histogram(Results[:, i])
-        centers = (bins[0:-1] + bins[1::]) / 2.0
-        plt.subplot(len(regressionNames), 1, i + 1)
-        plt.plot(centers, Histogram)
-        plt.title(r)
-    plt.show()
+    # for i, r in enumerate(regressionNames):
+    #     [Histogram, bins] = numpy.histogram(Results[:, i])
+    #     centers = (bins[0:-1] + bins[1::]) / 2.0
+    #     plt.subplot(len(regressionNames), 1, i + 1)
+    #     plt.plot(centers, Histogram)
+    #     plt.title(r)
+    # plt.show()
 
     #Reasonable scatterplot for regression
+
     N = len(Results) 
+
+    for idx, res in enumerate(Results):
+        filename = SyncFileNames[idx]
+        print("Results - {0} : {1}".format(Results[idx], filename))
+
+    t = numpy.arange(0.5, N)
     y = numpy.arange(N)  
-    col = numpy.where(Results[:,0]<.5,'r','b')
+
+    col = numpy.where(Results[...,0]<0.5,'r','b')
     plt.scatter(y, Results, c=col, alpha=0.6)
+    plt.axhline(y=0.5, color='r', linestyle='--')
     plt.show()
 
 
