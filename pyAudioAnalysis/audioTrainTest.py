@@ -534,6 +534,7 @@ def load_model_knn(kNNModelName, is_regression=False):
         STD = cPickle.load(fo)
         if not is_regression:
             classNames = cPickle.load(fo)
+            print(classNames)
         K = cPickle.load(fo)
         mt_win = cPickle.load(fo)
         mt_step = cPickle.load(fo)
@@ -564,6 +565,8 @@ def load_model(model_name, is_regression=False):
         - SVMmodel_name:     the path of the model to be loaded
         - is_regression:     a flag indigating whereas this model is regression or not
     '''
+    print("Model Name: {0}".format(model_name))
+
     try:
         fo = open(model_name + "MEANS", "rb")
     except IOerror:
@@ -906,6 +909,7 @@ def pcaDimRed(features, nDims):
 
 def fileClassification(inputFile, model_name, model_type):
     # Load classifier:
+    print("Loading Classifier")
 
     if not os.path.isfile(model_name):
         print("fileClassification: input model_name not found!")
@@ -922,11 +926,16 @@ def fileClassification(inputFile, model_name, model_type):
         [classifier, MEAN, STD, classNames, mt_win, mt_step, st_win, st_step,
          compute_beat] = load_model(model_name)
 
+
+    print("Printing Classnames")
+    print(classNames)
+
     [Fs, x] = audioBasicIO.readAudioFile(inputFile)        # read audio file and convert to mono
     x = audioBasicIO.stereo2mono(x)
 
     if isinstance(x, int):                                 # audio file IO problem
         return (-1, -1, -1)
+        print('io problem')
     if x.shape[0] / float(Fs) <= mt_win:
         return (-1, -1, -1)
 
@@ -959,6 +968,16 @@ def fileRegression(inputFile, model_name, model_type):
     regression_names = []
     for r in regression_models:
         regression_names.append(r[r.rfind("_")+1::])
+
+    print("{0}".format("Model Name: "))
+    print("{0}".format(model_name))
+
+    print("{0}".format("inputFile: "))
+    print("{0}".format(inputFile))
+    print("{0}".format("Model Type"))
+    print("{0}".format(model_type))
+    print("{0}".format("Model Name"))
+    print("{0}".format(model_type))
 
     # FEATURE EXTRACTION
     # LOAD ONLY THE FIRST MODEL (for mt_win, etc)

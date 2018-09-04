@@ -101,7 +101,12 @@ def classifyFileWrapper(inputFile, model_type, model_name):
 
     [Result, P, classNames] = aT.fileClassification(inputFile, model_name,
                                                     model_type)
+    print(Result)
+    print(P)
+    print(classNames)
+
     print("{0:s}\t{1:s}".format("Class", "Probability"))
+    print("classnames {0}".format(classNames))
     for i, c in enumerate(classNames):
         print("{0:s}\t{1:.2f}".format(c, P[i]))
     print("Winner class: " + classNames[int(Result)])
@@ -124,25 +129,35 @@ def classifyFolderWrapper(inputFolder, model_type, model_name,
     wavFilesList = []
     for files in types:
         wavFilesList.extend(glob.glob((inputFolder + files)))
+
     wavFilesList = sorted(wavFilesList)
+
     if len(wavFilesList) == 0:
         print("No WAV files found!")
         return
     Results = []
     for wavFile in wavFilesList:
+        print("List {0}".format(wavFilesList))
+        print(wavFile)
+        print(model_name)
+        print(model_type)
         [Result, P, classNames] = aT.fileClassification(wavFile, model_name,
                                                         model_type)
+
+        print("classnames: {0}".format(classNames))
         Result = int(Result)
         Results.append(Result)
         if outputMode:
             print("{0:s}\t{1:s}".format(wavFile, classNames[Result]))
     Results = numpy.array(Results)
 
+    #Workaround for complete test folder
+
     # print distribution of classes:
     [Histogram, _] = numpy.histogram(Results,
-                                     bins=numpy.arange(len(classNames) + 1))
-    for i, h in enumerate(Histogram):
-        print("{0:20s}\t\t{1:d}".format(classNames[i], h))
+        bins=numpy.arange(len(classNames) + 1))
+    #for i, h in enumerate(Histogram):
+    #    print("{0:20s}\t\t{1:d}".format(classNames[i], h))
 
 
 def regressionFolderWrapper(inputFolder, model_type, model_name):

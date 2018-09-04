@@ -9,6 +9,7 @@ pyAudioAnalysis/audioFeatureExtraction.py
 pyAudioAnalysis/audioSegmentation.py
 pyAudioAnalysis/audioTrainTest.py
 pyAudioAnalysis/audioVisualization.py
+pyAudioAnalysis/confusion_matrix.py
 pyAudioAnalysis/convertToWav.py
 pyAudioAnalysis/utilities.py
 pyAudioAnalysis.egg-info/PKG-INFO
