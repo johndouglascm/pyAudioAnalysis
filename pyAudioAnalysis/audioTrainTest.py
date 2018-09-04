@@ -565,8 +565,6 @@ def load_model(model_name, is_regression=False):
         - SVMmodel_name:     the path of the model to be loaded
         - is_regression:     a flag indigating whereas this model is regression or not
     '''
-    print("Model Name: {0}".format(model_name))
-
     try:
         fo = open(model_name + "MEANS", "rb")
     except IOerror:
@@ -968,16 +966,6 @@ def fileRegression(inputFile, model_name, model_type):
     regression_names = []
     for r in regression_models:
         regression_names.append(r[r.rfind("_")+1::])
-
-    print("{0}".format("Model Name: "))
-    print("{0}".format(model_name))
-
-    print("{0}".format("inputFile: "))
-    print("{0}".format(inputFile))
-    print("{0}".format("Model Type"))
-    print("{0}".format(model_type))
-    print("{0}".format("Model Name"))
-    print("{0}".format(model_type))
 
     # FEATURE EXTRACTION
     # LOAD ONLY THE FIRST MODEL (for mt_win, etc)
